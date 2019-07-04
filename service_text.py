@@ -100,6 +100,10 @@ while True:
         acesso = requests.get(url)
 
     else:
+        acesse_gateway = requests.get("http://172.16.200.136:3030/gateway/%s" % patrimonio)
+        gateway_js = acesse_gateway.json()
+        gateway_valor = gateway_js["gateway"]
+
         acesso_usr = requests.get("http://172.16.200.136:3030/att/usr/%s/%s" % (patrimonio, login))
         acesso_js_usr = acesso_usr.json()
 
@@ -112,19 +116,10 @@ while True:
             time.sleep(10)
 
         elif acesso_js["Status"] == "ON":
-
-            acesse_gateway = requests.get("http://172.16.200.136:3030/gateway/%s" % patrimonio)
-            gateway_js = acesse_gateway.json()
-
-            if acesso_js:
-                gateway_valor = gateway_js["gateway"]
-                command('route add 0.0.0.0 mask 0.0.0.0 %s' % gateway_valor)
-                time.sleep(10)
+            command('route add 0.0.0.0 mask 0.0.0.0 %s' % gateway_valor)
+            time.sleep(10)
 
             # capture (sniffing)
-
-            else:
-                print("")
 
         else:
             print("")
